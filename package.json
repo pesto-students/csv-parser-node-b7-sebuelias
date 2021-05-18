@@ -2,7 +2,7 @@
   "name": "csv-parser-node",
   "version": "1.0.0",
   "description": "A csv parser",
-  "main": "index.js",
+  "main": "./src/csv-parser.js",
   "author": "Sebu Elias",
   "license": "MIT"
 }
