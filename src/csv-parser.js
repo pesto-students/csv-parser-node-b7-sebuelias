@@ -107,19 +107,26 @@ function jsonToCsvParseFile(fileToParse, options) {
     const chunkString = chunk.toString();
     const jsonData = JSON.parse(chunkString);
 
-    // const chunkString = chunk;
     //to handle null values
     const nullReplacer = (key, value) => (value === null ? '' : value);
 
     const header = Object.keys(jsonData[0]);
 
     const csv = [
-      header.join(delimiter), // header row first
+      // header row first
+      header.join(delimiter),
+      // rest of the data iteratiing each entry
       ...jsonData.map((row) =>
+        /**
+         * using header here to iterate through that,
+         * to get KEY to obtain the VALUE and
+         * add DELIMITER in end of each value
+         */
         header
           .map((fieldName) => JSON.stringify(row[fieldName], nullReplacer))
           .join(delimiter),
       ),
+      // Add new line end of row
     ].join('\r\n');
 
     writeStream.push(csv);
