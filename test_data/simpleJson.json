@@ -1,62 +1,26 @@
 [
   {
-    "Country Code": "GB",
-    "State Code": "*",
-    "ZIP/Postcode": "*",
-    "City": "*",
-    "Rate %": "20.0000",
-    "Tax Name": "VAT  ",
-    "Priority": "1",
-    "Compound": "1",
-    "Shipping": "1",
-    "Tax Class": ""
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@doe.com",
+    "phoneNumber": "0123456789"
   },
   {
-    "Country Code": "GB",
-    "State Code": "*",
-    "ZIP/Postcode": "*",
-    "City": "*",
-    "Rate %": "5.0000",
-    "Tax Name": "VAT",
-    "Priority": "1",
-    "Compound": "1",
-    "Shipping": "1",
-    "Tax Class": "reduced-rate"
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "jane@doe.com",
+    "phoneNumber": "9876543210"
   },
   {
-    "Country Code": "GB",
-    "State Code": "*",
-    "ZIP/Postcode": "*",
-    "City": "*",
-    "Rate %": "0.0000",
-    "Tax Name": "VAT",
-    "Priority": "1",
-    "Compound": "1",
-    "Shipping": "1",
-    "Tax Class": "zero-rate"
+    "firstName": "James",
+    "lastName": "Bond",
+    "email": "james.bond@mi6.co.uk",
+    "phoneNumber": "0612345678"
   },
   {
-    "Country Code": "US",
-    "State Code": "*",
-    "ZIP/Postcode": "*",
-    "City": "*",
-    "Rate %": "10.0000",
-    "Tax Name": "US",
-    "Priority": "1",
-    "Compound": "1",
-    "Shipping": "1",
-    "Tax Class": ""
-  },
-  {
-    "Country Code": "US",
-    "State Code": "AL",
-    "ZIP/Postcode": "12345; 123456",
-    "City": "*",
-    "Rate %": "2.0000",
-    "Tax Name": "US AL",
-    "Priority": "2",
-    "Compound": "1",
-    "Shipping": "1",
-    "Tax Class": ""
+    "firstName": "abc",
+    "lastName": "xyz",
+    "email": "abc.xyz@mi6.co.uk",
+    "phoneNumber": "123987065"
   }
 ]

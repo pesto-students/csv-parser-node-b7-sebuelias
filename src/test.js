@@ -34,8 +34,8 @@ const testJSONtoCSV = () => {
   });
 };
 
-let CSVtoJSON = false;
-let JSONtoCSV = true;
+let CSVtoJSON = true;
+let JSONtoCSV = false;
 
 if (CSVtoJSON) {
   testCSVtoJSON();
