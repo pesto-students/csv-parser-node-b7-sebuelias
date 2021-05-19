@@ -1,9 +1,45 @@
-const { csvParse } = require('./csv-parser');
+const { csvToJsonParse, jsonToCsvParse } = require('./csv-parser');
 
-const filePath = '../test_data/CSVFile_2kb.csv';
-const option = { header: false, delimiter: ',' };
+/* -----------------------------------------csvToJsonParse------------------------------- */
+const testCSVtoJSON = () => {
+  console.log('------------------csvToJsonParse------------------');
+  const csvFilePath = '../test_data/simpleHeaderTest.csv';
+  const csvOption = {
+    header: true,
+    delimiter: ',',
+    /*  headerTransform: (header) => header.map((column) => column.toUpperCase()), */
+  };
 
-const result = csvParse(filePath, option);
+  const csvResult = csvToJsonParse(csvFilePath, csvOption);
 
-console.log('result');
-console.log(result);
+  console.log('result--JSON');
+  csvResult.on('data', (chunk) => {
+    console.log(chunk.toString());
+  });
+};
+
+/* -----------------------------------------jsonToCsvParse------------------------------- */
+const testJSONtoCSV = () => {
+  console.log('------------------jsonToCsvParse------------------');
+  const jsonFilePath = '../test_data/simpleJson.json';
+  const jsonOption = {
+    delimiter: ',',
+  };
+
+  const jsonResult = jsonToCsvParse(jsonFilePath, jsonOption);
+
+  console.log('result---CSV');
+  jsonResult.on('data', (chunk) => {
+    console.log(chunk.toString());
+  });
+};
+
+let CSVtoJSON = false;
+let JSONtoCSV = true;
+
+if (CSVtoJSON) {
+  testCSVtoJSON();
+}
+if (JSONtoCSV) {
+  testJSONtoCSV();
+}

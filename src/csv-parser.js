@@ -1,22 +1,22 @@
 const fs = require('fs');
 const path = require('path');
-let final = [];
+const { Transform } = require('stream');
 
-function csvParse(contentToParse, options = { delimiter: ',', header: false }) {
+function csvToJsonParse(
+  contentToParse,
+  options = { delimiter: ',', header: false, headerTransform: null },
+) {
   /**
    * TODO: need to add test for filePath or CSV data
    * for now, assuming filePath
    */
-  return csvParseFile(contentToParse, options);
+  return csvToJsonParseFile(contentToParse, options);
 }
 
-function csvParseFile(
-  fileToParse,
-  options = { delimiter: ',', header: false },
-) {
+function csvToJsonParseFile(fileToParse, options) {
   const filePath = path.resolve(fileToParse);
-  const { delimiter, header } = options;
-  const data = [];
+  const { delimiter, header, headerTransform } = options;
+  // const data = [];
   let headerRow = [];
   let headerSet = false;
   const readStream = fs.createReadStream(filePath, {
@@ -24,15 +24,17 @@ function csvParseFile(
     // highWaterMark: 16,
   });
 
+  const writeStream = new Transform();
+
   /**
    * ! Parse data as we read from stream and
    * on end handle finishing?
    */
   readStream.on('data', (chunk) => {
-    // console.log('CHUCKS', chunk);
+    // console.log('CHUCKS', chunk.toString());
     let strippedChunk = chunk.toString().replace(/(\r|\r\n)/g, '');
-
     let arrays = strippedChunk.split('\n');
+    // let arrays = chunk.toString().split('\n');
     /**
      * TODO:  Trim empty lines
      */
@@ -47,6 +49,10 @@ function csvParseFile(
     if (header && !headerSet) {
       headerSet = true;
       headerRow = arrays[0];
+
+      if (headerTransform != null) {
+        headerRow = headerTransform(headerRow);
+      }
       /* remove 1st row after using it for header */
       arrays = arrays.slice(1);
     }
@@ -62,9 +68,15 @@ function csvParseFile(
       });
     }
 
-    // console.log(arrays);
-    data.push(arrays);
+    const stringifiedJSONObj = JSON.stringify(arrays);
+    writeStream.push(stringifiedJSONObj);
+    // data.push(arrays);
   });
+
+  // readStream.on('close', () => {
+  // console.log('writeStream');
+  // console.log(writeStream);
+  // });
 
   // readStream.on('end', function () {
   //   data.forEach((value, index) => {
@@ -72,11 +84,52 @@ function csvParseFile(
   //   });
   // });
 
-  // console.log('final in main');
-  // console.log(final);
-  return final;
+  return writeStream;
+}
+
+function jsonToCsvParse(contentToParse, options = { delimiter: ',' }) {
+  /**
+   * TODO: need to add test for filePath or CSV data
+   * for now, assuming filePath
+   */
+  return jsonToCsvParseFile(contentToParse, options);
+}
+
+function jsonToCsvParseFile(fileToParse, options) {
+  const filePath = path.resolve(fileToParse);
+  const { delimiter } = options;
+
+  const readStream = fs.createReadStream(filePath);
+
+  const writeStream = new Transform();
+
+  readStream.on('data', (chunk) => {
+    const chunkString = chunk.toString();
+    const jsonData = JSON.parse(chunkString);
+
+    // const chunkString = chunk;
+    //to handle null values
+    const nullReplacer = (key, value) => (value === null ? '' : value);
+
+    const header = Object.keys(jsonData[0]);
+
+    const csv = [
+      header.join(delimiter), // header row first
+      ...jsonData.map((row) =>
+        header
+          .map((fieldName) => JSON.stringify(row[fieldName], nullReplacer))
+          .join(delimiter),
+      ),
+    ].join('\r\n');
+
+    writeStream.push(csv);
+    // console.log(csv);
+  });
+
+  return writeStream;
 }
 
 module.exports = {
-  csvParse,
+  csvToJsonParse,
+  jsonToCsvParse,
 };
