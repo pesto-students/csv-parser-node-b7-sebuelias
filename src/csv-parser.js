@@ -33,7 +33,17 @@ function csvToJsonParseFile(fileToParse, options) {
   readStream.on('data', (chunk) => {
     // console.log('CHUCKS', chunk.toString());
     let strippedChunk = chunk.toString().replace(/(\r|\r\n)/g, '');
-    let arrays = strippedChunk.split('\n');
+    let arrays = [];
+    let lines = strippedChunk.split('\n');
+
+    /* Stripping comments */
+    for (let line of lines) {
+      if (line.indexOf('#') !== -1) {
+        line = line.slice(0, line.indexOf('#'));
+      }
+      arrays.push(line);
+    }
+
     // let arrays = chunk.toString().split('\n');
     /**
      * TODO:  Trim empty lines
